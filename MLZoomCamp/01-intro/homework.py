@@ -17,5 +17,16 @@ housing.ocean_proximity.nunique()
 #Question 5: Average value of the 'median_house_value' for the houses near the bay
 housing.median_house_value[housing['ocean_proximity'] == 'NEAR BAY'].mean()
 
+#Question 6: Has the mean value changed after filling missing values?
+housing.total_bedrooms.mean()
+housing_filled = housing.fillna(housing.total_bedrooms.mean())
+housing_filled.total_bedrooms.mean()
+
 Questions 7: Value of the last element of w
-#What is w in the question?
+import numpy as np
+housing_island = housing.loc[housing['ocean_proximity'] == 'ISLAND', ['housing_median_age', 'total_rooms', 'total_bedrooms']]
+X = housing_island.to_numpy() #(5 rows 3 cols)
+XTX = X.T.dot(X)   #(3*3)
+XTXinv = np.linalg.inv(XTX)  #(3*3)
+y = np.array([950, 1300, 800, 1000, 1300]) #(1 row 5 cols)
+w = XTXinv.dot(X.T).dot(y) #(1 row 3 cols)
