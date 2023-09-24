@@ -99,3 +99,36 @@ for r in [0, 0.000001, 0.0001, 0.001, 0.01, 0.1, 1, 5, 10]:
     
     score = rmse(y_val, y_pred_0).round(2)
     print(r, w0, score)
+    
+####################################
+
+#Question 5:
+score = [10]
+score = np.array(score)
+for s in range(len(score)):
+    np.random.seed(s) #determenistic randomiser
+    np.random.shuffle(idx)
+
+    #Prepare and split the dataset in (0.6, 0.2, 0.2):
+    hsb_train = hsb.iloc[idx[0:n_train]]
+    hsb_val = hsb.iloc[idx[n_train:n_train+n_val]]
+    hsb_test = hsb.iloc[idx[n_train+n_val:n]]
+    
+    #Apply the log transformation:
+    y_train = np.log1p(hsb_train.median_house_value)
+    y_val = np.log1p(hsb_val.median_house_value)
+    y_test = np.log1p(hsb_test.median_house_value)
+
+    #Train dataset
+    X_train_0 = hsb_train[hsb_train.columns].fillna(0).values
+    w0_0, w_0 = train_linear_regression(X_train_0, y_train)
+    #Validate dataset (20% of full dataset hsb) 
+    X_val_0 = hsb_val[hsb_val.columns].fillna(0).values
+    y_pred_0 = w0_0 + X_val_0.dot(w_0)
+
+    score[s] = rmse(y_val, y_pred_0).round(2)
+    print (s, score[s])
+
+np.std(score).round(3)
+    
+####################################    
