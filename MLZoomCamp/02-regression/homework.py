@@ -132,3 +132,31 @@ for s in range(len(score)):
 np.std(score).round(3)
     
 ####################################    
+
+#Question 6:
+s = 9
+r = 0.001
+np.random.seed(s) #determenistic randomiser
+np.random.shuffle(idx)
+
+#Prepare and split the dataset in (0.6, 0.2, 0.2):
+hsb_train = hsb.iloc[idx[0:n_train]]
+hsb_val = hsb.iloc[idx[n_train:n_train+n_val]]
+hsb_test = hsb.iloc[idx[n_train+n_val:n]]
+hsb_full_train = pandas.concat([hsb_train, hsb_val])
+hsb_full_train = hsb_full_train.reset_index(drop=True)
+
+#Apply the log transformation:
+y_train = np.log1p(hsb_train.median_house_value)
+y_val = np.log1p(hsb_val.median_house_value)
+y_test = np.log1p(hsb_test.median_house_value)
+y_full_train = np.concatenate([y_train, y_val])
+
+#Train dataset
+X_full_train_0 = hsb_full_train[hsb_full_train.columns].fillna(0).values
+w0_0, w_0 = train_linear_regression_reg(X_full_train_0, y_full_train, r=0.001)
+#Test dataset (20% of full dataset hsb) 
+X_test_0 = hsb_test[hsb_test.columns].fillna(0).values
+y_pred_0 = w0_0 + X_test_0.dot(w_0)
+
+score = rmse(y_test, y_pred_0).round(2)
