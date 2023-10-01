@@ -35,9 +35,9 @@ df_train = df_train.reset_index(drop = True)
 df_val = df_val.reset_index(drop = True)
 df_test = df_test.reset_index(drop = True)
 
-y_train = df_train.price.values
-y_val = df_val.price.values
-y_test = df_test.price.values
+y_train = df_train.above_average.values
+y_val = df_val.above_average.values
+y_test = df_test.above_average.values
 
 del df_train['price']
 del df_val['price']
@@ -54,3 +54,25 @@ def calculate_mi(series):
 df_mi = df_train[categorical].apply(calculate_mi).round(2)
 df_mi = df_mi.sort_values(ascending=False)
 
+
+#Q4
+#Prepare one-hot encoding for train and validation datasets
+from sklearn.feature_extraction import DictVectorizer
+dv = DictVectorizer(sparse=False)
+
+train_dict = df_train[categorical].to_dict(orient='records')
+X_train = dv.fit_transform(train_dict) 
+val_dict = df_val[categorical].to_dict(orient='records')
+X_val = dv.transform(val_dict)
+
+dv.get_feature_names_out() #return names of the columns in the sparse one-hot encoding matrix X_train
+list(X_train[0])
+
+#Train logistic regression model
+from sklearn.linear_model import LogisticRegression
+model = LogisticRegression(solver='liblinear', C=10, max_iter=1000, random_state=42)
+model.fit(X_train, y_train)
+model.predict_proba(X_val)
+y_pred = model.predict_proba(X_val)[:, 1] #second column for 1 predictions
+churn = y_pred > 0.5
+(y_val == churn).mean().round(2)
