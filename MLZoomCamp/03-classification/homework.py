@@ -1,6 +1,7 @@
 #Preparation:
-data = pandas.read_csv(r'https://raw.githubusercontent.com/alexeygrigorev/mlbookcamp-code/master/chapter-02-car-price/data.csv')
-categorical = ['Make','Model','Year','Engine HP','Engine Cylinders','Transmission Type','Vehicle Style','highway MPG','city mpg']
+data0 = pandas.read_csv(r'https://raw.githubusercontent.com/alexeygrigorev/mlbookcamp-code/master/chapter-02-car-price/data.csv')
+categorical = ['Make','Model','Year','Engine HP','Engine Cylinders','Transmission Type','Vehicle Style','highway MPG','city mpg', 'MSRP']
+data = pandas.DataFrame(data0, columns = categorical)
 data.columns = data.columns.str.replace(' ', '_').str.lower()
 for col in data.columns:
     data[col] = data[col].fillna(0).values
@@ -43,6 +44,10 @@ del df_train['price']
 del df_val['price']
 del df_test['price']
 
+del df_train['above_average']
+del df_val['above_average']
+del df_test['above_average']
+
 
 #Question 3: Calculate the mutual information score
 from sklearn.metrics import mutual_info_score
@@ -55,7 +60,7 @@ df_mi = df_train[categorical].apply(calculate_mi).round(2)
 df_mi = df_mi.sort_values(ascending=False)
 
 
-#Q4
+#Question 4:
 #Prepare one-hot encoding for train and validation datasets
 from sklearn.feature_extraction import DictVectorizer
 dv = DictVectorizer(sparse=False)
@@ -76,3 +81,35 @@ model.predict_proba(X_val)
 y_pred = model.predict_proba(X_val)[:, 1] #second column for 1 predictions
 churn = y_pred > 0.5
 (y_val == churn).mean().round(2)
+
+
+#Question 5: Accuracy for feature elimination
+accuracies = [0] * len(categorical)
+i = 0
+for c in categorical:
+    dv = DictVectorizer(sparse=False)
+    df_train_small = df_train[df_train.columns.difference([c], sort=False)]
+    df_val_small = df_val[df_val.columns.difference([c], sort=False)]
+    
+    train_dict_small = df_train_small.to_dict(orient='records')
+    X_train_small = dv.fit_transform(train_dict_small) 
+    val_dict_small = df_val_small.to_dict(orient='records')
+    X_val_small = dv.transform(val_dict_small)
+
+    dv.get_feature_names_out() #return names of the columns in the sparse one-hot encoding matrix X_train
+    list(X_train_small[0])
+
+    #Train logistic regression model
+    from sklearn.linear_model import LogisticRegression
+    model_small = LogisticRegression(solver='liblinear', C=10, max_iter=1000, random_state=42)
+    model_small.fit(X_train_small, y_train)
+    model_small.predict_proba(X_val_small)
+    y_pred_small = model_small.predict_proba(X_val_small)[:, 1] #second column for 1 predictions
+    churn_small = y_pred_small > 0.5
+    accuracies[i] = (y_val == churn_small).mean().round(2)
+    i = i+1
+dict(zip(categorical, accuracies))
+
+
+#Question 6:
+#Not enough time :(
