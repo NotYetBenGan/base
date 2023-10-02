@@ -96,17 +96,14 @@ for c in categorical:
     val_dict_small = df_val_small.to_dict(orient='records')
     X_val_small = dv.transform(val_dict_small)
 
-    dv.get_feature_names_out() #return names of the columns in the sparse one-hot encoding matrix X_train
-    list(X_train_small[0])
-
     #Train logistic regression model
     from sklearn.linear_model import LogisticRegression
     model_small = LogisticRegression(solver='liblinear', C=10, max_iter=1000, random_state=42)
     model_small.fit(X_train_small, y_train)
     model_small.predict_proba(X_val_small)
-    y_pred_small = model_small.predict_proba(X_val_small)[:, 1] #second column for 1 predictions
+    y_pred_small = model_small.predict_proba(X_val_small)[:, 1]
     churn_small = y_pred_small > 0.5
-    accuracies[i] = (y_val == churn_small).mean().round(2)
+    accuracies[i] = (y_val == churn_small).mean().round(3)
     i = i+1
 dict(zip(categorical, accuracies))
 
