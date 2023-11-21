@@ -26,53 +26,52 @@ x.shape
 
 ### Develop the model with following structure
 ###################################################################
-input_shape=(150,150,3) # (height, width, channels)
+def make_model(learning_rate=0.002):
+    input_shape=(150,150,3) # (height, width, channels)
 
-#Run this 2 times! The first time is some error!
-inputs = keras.Input(shape=input_shape)
+    #Run this 2 times! The first time is some error!
+    inputs = keras.Input(shape=input_shape)
 
-# Create a Convolutional layer to produce a tensor of outputs
-conv_2d_out = tf.keras.layers.Conv2D(32, #filters
-                           (3, 3), #kernel_size
-                           activation='relu', 
-                           input_shape=input_shape)(inputs)
-print(conv_2d_out.shape) # batch_size + (new_rows, new_cols, filters)
+    # Create a Convolutional layer to produce a tensor of outputs
+    conv_2d_out = tf.keras.layers.Conv2D(32, #filters
+                               (3, 3), #kernel_size
+                               activation='relu', 
+                               input_shape=input_shape)(inputs)
+    #print(conv_2d_out.shape) # batch_size + (new_rows, new_cols, filters)
 
-# Create a Pooling layer to reduce the dimensionality of the feature map with max pooling 
-max_pool_2d_out = tf.keras.layers.MaxPooling2D(pool_size=(2, 2),input_shape=input_shape)(conv_2d_out)
-print(max_pool_2d_out.shape)
+    # Create a Pooling layer to reduce the dimensionality of the feature map with max pooling 
+    max_pool_2d_out = tf.keras.layers.MaxPooling2D(pool_size=(2, 2),input_shape=input_shape)(conv_2d_out)
+    #print(max_pool_2d_out.shape)
 
-# Create Flatten layer to convert all the resultant 2D arrays from pooled feature maps into a single linear vector
-vectors = tf.keras.layers.Flatten()(max_pool_2d_out)
-print(vectors.shape)
+    # Create Flatten layer to convert all the resultant 2D arrays from pooled feature maps into a single linear vector
+    vectors = tf.keras.layers.Flatten()(max_pool_2d_out)
+    #print(vectors.shape)
 
-# Create Dense layer of 64
-outputs_dense_1 = tf.keras.layers.Dense(64, activation='relu')(vectors)
-print(outputs_dense_1.shape)
+    # Create Dense layer of 64
+    outputs_dense_1 = tf.keras.layers.Dense(64, activation='relu')(vectors)
+    #print(outputs_dense_1.shape)
 
-# Create Dense layer of 1 with sigmoid activation function
-outputs = tf.keras.layers.Dense(1, activation='sigmoid')(outputs_dense_1)
-print(outputs.shape)
+    # Create Dense layer of 1 with sigmoid activation function
+    outputs = tf.keras.layers.Dense(1, activation='sigmoid')(outputs_dense_1)
+    #print(outputs.shape)
 
-model2 = keras.Model(inputs, outputs)
+    model = keras.Model(inputs, outputs)
 
-###################################################################
+    # Define learning rate
+    #learning_rate = learning_rate
 
-# Define learning rate
-learning_rate = 0.002
+    # Create optimizer
+    optimizer = keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.8)
 
-# Create optimizer
-optimizer = keras.optimizers.SGD(learning_rate=learning_rate, momentum=0.8)
+    # Define loss function
+    loss = tf.keras.losses.BinaryCrossentropy()
 
-# Define loss function
-loss = tf.keras.losses.BinaryCrossentropy()
-
-# Compile the model
-model2.compile(optimizer=optimizer,
-              loss=loss,
-              metrics=['accuracy']) # evaluation metric accuracy
-
-model2.summary()
+    # Compile the model
+    model.compile(optimizer=optimizer,
+                  loss=loss,
+                  metrics=['accuracy']) # evaluation metric accuracy
+    
+    return model
 
 ###################################################################
 
@@ -105,15 +104,54 @@ val_ds = val_gen.flow_from_directory(
     ,class_mode=class_mode
 )
 
+###################################################################
+
 # Train the model, validate it with validation data, and save the training history
-history = model2.fit(train_ds, epochs=10, validation_data=val_ds)
+learning_rate = 0.002
+model = make_model(learning_rate=learning_rate)
+history = model.fit(train_ds, epochs=10, validation_data=val_ds)
+model.summary()
 
 ###################################################################
 
-### Check the statistics
-
+# Check the statistics
 import statistics
 round(statistics.median(history.history['accuracy']),3)
 round(statistics.stdev(history.history['loss']),3)
 
+###################################################################
 
+# Data augmentation
+target_size = (150, 150) #homework requirement
+batch_size = 20          #homework requirement
+class_mode='binary'
+
+# Build image generator for training 
+train_gen_augmentated = ImageDataGenerator(rescale=1./255,
+                               rotation_range=50,
+                               width_shift_range=0.1,
+                               height_shift_range=0.1,
+                               zoom_range=0.1,
+                               horizontal_flip=True,
+                               fill_mode='nearest')
+
+# Load in train dataset into train generator
+train_ds_augmentated = train_gen_augmentated.flow_from_directory(
+    './data/train/',
+    target_size=target_size,
+    batch_size=batch_size, 
+    shuffle=True   
+    ,class_mode=class_mode
+)
+
+###################################################################
+
+# Keep the same model
+learning_rate = 0.002
+model = make_model(learning_rate=learning_rate)
+history = model.fit(train_ds_augmentated, epochs=10, validation_data=val_ds)
+
+###################################################################
+# Few more stats
+round(statistics.mean(history.history['val_loss']),3)
+round(statistics.mean(history.history['val_accuracy'][5:9]),3)
