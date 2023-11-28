@@ -1,6 +1,9 @@
 #Run in CMD
+#Use this advice in case of error https://stackoverflow.com/questions/63404192/pip-install-tensorflow-cannot-find-file-called-client-load-reporting-filter-h
 pip install tensorflow
-ipyton
+ipython
+
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 model = keras.models.load_model('bees-wasps.h5')
@@ -28,4 +31,41 @@ print(output_index)
 
 
 #Preparing the image
+!pip install pillow
 
+from io import BytesIO
+from urllib import request
+from PIL import Image
+
+def download_image(url):
+    with request.urlopen(url) as resp:
+        buffer = resp.read()
+    stream = BytesIO(buffer)
+    img = Image.open(stream)
+    return img
+
+
+def prepare_image(img, target_size):
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    img = img.resize(target_size, Image.NEAREST)
+    return img
+
+img = prepare_image(
+    download_image('https://habrastorage.org/webt/rt/d9/dh/rtd9dhsmhwrdezeldzoqgijdg8a.jpeg'),
+    (150, 150)
+)
+
+
+#Q4. Get the value in the first pixel, the R channel?
+x = np.array(img, dtype='float32')
+x = x/ 255
+x[0,0,0] 
+
+
+#Q4. Get preds
+X = np.array([x])
+interpreter.set_tensor(input_index, X)
+interpreter.invoke()
+preds = interpreter.get_tensor(output_index)
+preds
