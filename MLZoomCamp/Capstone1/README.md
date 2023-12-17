@@ -48,5 +48,18 @@ Tuning:
 The model was trained for 10 epochs
 
 ## Exporting notebook to script
-In the notebook I've created the final model and saved it to as separate file [`model.bin`](model.bin), same code used in [`train.py`](train.py). You can see both in this github project.
+In the notebook I've created the final model and saved it to as separate file [`model_lr_0_02_05_0.895.h5`](model_lr_0_02_05_0.895.h5),
+- We can create the same model running [`train.py`](train.py) in CMD
+- Next we convert the model to tensorflow lite format. Run [`convert_lite.py`](convert_lite.py) in CMD
+- Then we can use the model via [`predict.py`](predict.py) on the test image located [here](https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png)
+
+## Reproducibility
+Steps to run in CMD:
+1. _python train.py_
+2. _python convert_lite.py_
+3. _python predict.py_
+4. _ipython_
+5. _import predict_
+6. _url = f'https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png'_
+7. _predict.predict(url)_
 
