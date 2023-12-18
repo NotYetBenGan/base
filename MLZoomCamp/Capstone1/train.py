@@ -138,6 +138,3 @@ for lr in [0.02]:#[0.002, 0.02, 0.2]:
     print()
     print()
 
-
-# Save the model
-model.save('model_lr_0_02_05_0.895.h5', save_format='h5')
