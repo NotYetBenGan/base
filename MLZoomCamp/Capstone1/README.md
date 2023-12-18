@@ -50,24 +50,24 @@ The model was trained for 10 epochs based on the [Dataset](http://laurencemorone
 
 
 ## Exporting notebook to script
-In the notebook I've created the final model and saved it to as separate file [`model_lr_0_02_05_0.895.h5`](model_lr_0_02_05_0.895.h5),
-- We can create the same model running [`train.py`](train.py) in CMD
-- Next we convert the model to tensorflow lite format. Run [`convert_lite.py`](convert_lite.py) in CMD
+In the notebook I've created the final model and saved it to as separate file `model_lr_0_02_0X_0.YYY.h5` on my machine, where X - epoch number and YYY - validation accuracy
+- We create the same model running [`train.py`](train.py), I already use learning_rate = 0.02 inside, as it shows the best performace
+- Next we convert the model to tensorflow lite format in [`convert_lite.py`](convert_lite.py) 
 - Then we can use the model via [`predict.py`](predict.py) on the test image located [here](https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png)
 
 
 ## Reproducibility
 - Download [`train.py`](train.py), [`convert_lite.py`](convert_lite.py), [`predict.py`](predict.py) scripts in your location
-- Download [`model_lr_0_02_05_0.895.h5`](model_lr_0_02_05_0.895.h5) - the best model I got so far - in your location
 - Start CMD in this location
-- Steps to run in CMD:
-1. _python train.py_ (some TF warnings could appear during the run)
-2. _python convert_lite.py_
-3. _python predict.py_
-4. _ipython_
-5. _import predict_
-6. _url = f'https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png'_
-7. _predict.predict(url)_
+- Run in CMD _python train.py_ (some TF warnings could appear during the run)
+- Choose the file with MAX(YYY) in model_lr_0_02_0X_0.YYY.h5 - this will be the best validation accuracy
+- Open convert_lite.py script and amend the line #13 to set the real X and YYY numbers there 
+- Run in CMD _python convert_lite.py_
+- Run in CMD _python predict.py_
+- Run in CMD _ipython_
+- Run in CMD _import predict_
+- Run in CMD _url = f'https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png'_
+- Run in CMD _predict.predict(url)_
 
-As a result, we get some small number ~0.003, which is close to 0. As we have 2 classes: {'horses': 0, 'humans': 1} - highly likley we have a hourse on the picture :) 
+As a result, you will get some small number which is close to 0. As we have 2 classes: {'horses': 0, 'humans': 1} - highly likley we have a hourse on the picture :) 
 
