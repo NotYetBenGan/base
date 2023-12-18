@@ -39,21 +39,6 @@ for root, dirs, files in os.walk(rootPath):
         zipfile.ZipFile(os.path.join(root, filename)).extractall(os.path.join(root, os.path.splitext(filename)[0]))
 
 
-# One image example
-"""
-path = './horse-or-human/horses'
-name = 'horse01-0.png'
-fullname = f'{path}/{name}'
-load_img(fullname)
-img = load_img(fullname, target_size=(150, 150))
-x = np.array(img)
-X = np.array([x])
-X.shape
-from tensorflow.keras.applications.xception import preprocess_input
-X = preprocess_input(X)
-"""
-
-
 def make_model(learning_rate=0.02):
     input_shape=(150,150,3) # (height, width, channels)
 
@@ -147,7 +132,7 @@ for lr in [0.02]:#[0.002, 0.02, 0.2]:
     print(lr)
 
     model = make_model(learning_rate=lr)
-    history = model.fit(train_ds, epochs=3, validation_data=val_ds, callbacks=[chechpoint])
+    history = model.fit(train_ds, epochs=10, validation_data=val_ds, callbacks=[chechpoint])
     scores[lr] = history.history
 
     print()
