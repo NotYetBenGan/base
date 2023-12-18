@@ -72,7 +72,7 @@ In the notebook I've created the final model and saved it to as separate file on
 As a result, you will get some small number which is close to 0. As we have 2 classes: {'horses': 0, 'humans': 1} - highly likley we have a hourse on the picture :) 
 
 
-## Model Deployment
+## Model Deployment and enviroment management
 Create a new virtual environment for testing the deployment.
 
 - Run in Anaconda CMD - to create new environment 
