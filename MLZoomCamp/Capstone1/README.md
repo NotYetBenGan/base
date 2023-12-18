@@ -50,24 +50,48 @@ The model was trained for 10 epochs based on the [Dataset](http://laurencemorone
 
 
 ## Exporting notebook to script
-In the notebook I've created the final model and saved it to as separate file `model_lr_0_02_0X_0.YYY.h5` on my machine, where X - epoch number and YYY - validation accuracy
-- We create the same model running [`train.py`](train.py), I already use learning_rate = 0.02 inside, as it shows the best performace
-- Next we convert the model to tensorflow lite format in [`convert_lite.py`](convert_lite.py) 
+In the notebook I've created the final model and saved it to as separate file on my machine for local testing.
+- We create the same model running [`train.py`](train.py). As an output we have `model_lr_0_02_0X_0.YYY.h5` file, where X - epoch number and YYY - validation accuracy. I already use learning_rate = 0.02 inside, as it shows the best performace
+- Next we convert the model to tensorflow lite format in [`convert_lite.py`](convert_lite.py). As an output we have `model.tflite` file
 - Then we can use the model via [`predict.py`](predict.py) on the test image located [here](https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png)
 
 
 ## Reproducibility
 - Download [`train.py`](train.py), [`convert_lite.py`](convert_lite.py), [`predict.py`](predict.py) scripts in your location
 - Start CMD in this location
-- Run in CMD _python train.py_ (some TF warnings could appear during the run)
+- Run in CMD ```python train.py ``` (some TF warnings could appear during the run)
 - Choose the file with MAX(YYY) in model_lr_0_02_0X_0.YYY.h5 - this will be the best validation accuracy
 - Open convert_lite.py script and amend the line #13 to set the real X and YYY numbers there 
-- Run in CMD _python convert_lite.py_
-- Run in CMD _python predict.py_
-- Run in CMD _ipython_
-- Run in CMD _import predict_
-- Run in CMD _url = f'https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png'_
-- Run in CMD _predict.predict(url)_
+- Run in CMD ```python convert_lite.py ```
+- Run in CMD ```python predict.py ```
+- Run in CMD ```ipython ```
+- Run in CMD ```import predict ```
+- Run in CMD ```url = f'https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png' ```
+- Run in CMD ```predict.predict(url) ```
 
 As a result, you will get some small number which is close to 0. As we have 2 classes: {'horses': 0, 'humans': 1} - highly likley we have a hourse on the picture :) 
 
+
+## Model Deployment
+Create a new virtual environment for testing the deployment.
+
+- Run in Anaconda CMD - to create new environment 
+    ```bash
+    conda create --name deployment-capstone1 python=3.10.12
+    ```	
+- Run in Anaconda CMD - to activate the virtual environment
+    ```bash
+    conda activate deployment-capstone1
+    ```
+- Go to your location, where you already have [`predict.py`](predict.py)
+- Within the activated virtual environment `(deployment-capstone1)` install the requirements from the [`deployment-requirements.txt`](deployment-requirements.txt) 
+    ```bash
+    pip install -r deployment-requirements.txt
+    ```
+- Run in Anaconda CMD ```python predict.py ```
+- Run in Anaconda CMD ```ipython ```
+- Run in Anaconda CMD ```import predict ```
+- Run in Anaconda CMD ```url = f'https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png' ```
+- Run in Anaconda CMD ```predict.predict(url) ```
+
+A a result you again will get the classification number close to 0.
