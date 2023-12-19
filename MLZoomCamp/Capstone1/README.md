@@ -95,3 +95,28 @@ Create a new virtual environment for testing the deployment.
 - Run in Anaconda CMD ```predict.predict(url) ```
 
 A a result you again will get the classification number close to 0.
+
+
+## Containerization
+I use Docker Desktop preinstalled on my machine. Let's put the prediction in a Docker container. 
+
+1. I've prepared [`Dockerfile`](Dockerfile) with instructions. Unfortunately, I was not able to avoid ```RUN pip install tensorflow``` command. It took less than 2 minutees to install during the build. If you know how to avoid this, please write in the review 
+
+2. Running the Docker Container and testing
+
+- Run in CMD building the Docker image based on [`Dockerfile`](Dockerfile)
+    ```bash
+    docker build -t model .
+    ```
+
+- Run in CMD the Docker container itself
+    ```bash	
+    docker run -it --rm -p 8080:8080 model
+    ```
+
+- Open CLI for running container the in Docker Desktop and run
+    ```bash
+    python predict.py
+    python test.py	
+    ```
+- We have our prediction float number again :)
