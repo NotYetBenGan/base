@@ -3,7 +3,7 @@
 
 ## Description of the problem
 - This is classical image classification problem - to distinguish input images dataset between 2 categories. In this project we try to classify humans and horses.
-- We will train the CNN model, save it and use via lambda function
+- We will train the CNN model, save it and use via lambda function in the Docker container
 
 
 ## Dataset Information and EDA (Exploratory Data Analysis)
@@ -20,7 +20,7 @@ Information about the train dataset [`horse-or-human`](horse-or-human):
 
 Information about the validation dataset [`validation-horse-or-human`](validation-horse-or-human):
 - Adds six different figures to ensure breadth of data.
-- 128 horse images and 128 human images.
+- Contains 128 horse images and 128 human images.
 
 
 ## Model Training
@@ -39,19 +39,17 @@ Model training was done in a Jupyter Notebook in the [Saturn Cloud](https://app.
   - SGD with parametrized learning_rate (0.02 as default) and momentum=0.8
  
 Tuning:
-- extra inner layers
-- adjusting learning rate
-- size of the inner layer
+- added extra inner layer
+- adjusting learning rate [0.002, 0.02, 0.2]
 
 On my choise the learning_rate = 0.02 shows the best performance [`Choose_best_Learning_rate.png`](Choose_best_Learning_rate.png)
-
 
 The model was trained for 10 epochs based on the [Dataset](http://laurencemoroney.com/horses-or-humans-dataset)
 
 
 ## Exporting notebook to script
-In the notebook I've created the final model and saved it to as separate file on my machine for local testing.
-- We create the same model running [`train.py`](train.py). As an output we have `model_lr_0_02_0X_0.YYY.h5` file, where X - epoch number and YYY - validation accuracy. I already use learning_rate = 0.02 inside, as it shows the best performace
+In the notebook I've created the final model and saved it as separate file on my machine for local testing.
+- We create the same model running [`train.py`](train.py). As an output we have `model_lr_0_02_0X_0.YYY.h5` file, where X - epoch number and YYY - validation accuracy. I already use learning_rate = 0.02 inside, as it shows the best performace. The best validation accuracy was 0.895 
 - Next we convert the model to tensorflow lite format in [`convert_lite.py`](convert_lite.py). As an output we have `model.tflite` file
 - Then we can use the model via [`predict.py`](predict.py) on the test image located [here](https://habrastorage.org/webt/h9/l5/yj/h9l5yjjbhyo8ocvulhlmg6gbcni.png)
 
@@ -100,7 +98,7 @@ A a result you again will get the classification number close to 0.
 ## Containerization
 I use Docker Desktop preinstalled on my machine. Let's put the prediction in a Docker container. 
 
-1. I've prepared [`Dockerfile`](Dockerfile) with instructions. Unfortunately, I was not able to avoid ```RUN pip install tensorflow``` command. It took less than 2 minutees to install during the build. If you know how to avoid this, please write in the review 
+1. I've prepared [`Dockerfile`](Dockerfile) with instructions. Unfortunately, I was not able to avoid ```RUN pip install tensorflow``` command. It took less than 2 minutees to install it during the build. If you know how to avoid this, please write in the review 
 
 2. Running the Docker Container and testing
 
