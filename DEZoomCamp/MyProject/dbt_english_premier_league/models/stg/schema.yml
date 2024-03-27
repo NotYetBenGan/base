@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: stg
+    database: english-premier-league-417019
+    schema: stg
+
+      # loaded_at_field: record_loaded_at
+    tables:
+      - name: DimManagerClub
+
+models:
+    - name: DimManagerClub_stg_to_dwh
+      description: >
+        Relation between managers and clubs
