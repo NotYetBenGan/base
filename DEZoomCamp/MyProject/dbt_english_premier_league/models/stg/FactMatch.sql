@@ -5,14 +5,14 @@
       'data_type': 'date',
       'granularity': 'year'
     }
-    ,cluster_by = ['managerId','clubId']
+    ,cluster_by = 'matchId'
     ) 
 }}
  
-with DimManagerClub as 
+with FactMatch as 
 (
   select *
-  from {{ source('stg','DimManagerClub') }}
+  from {{ source('stg','FactMatch') }}
 )
-select * from DimManagerClub
+select * from FactMatch
 

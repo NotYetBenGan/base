@@ -1,15 +1,51 @@
 version: 2
+#Load from Stg to Dwh schema
 
 sources:
   - name: stg
     database: english-premier-league-417019
-    schema: stg
-
-      # loaded_at_field: record_loaded_at
+    schema: Stg  #<- case sensitive!
     tables:
+      - name: DimClub
+      - name: DimManager
       - name: DimManagerClub
+      - name: DimMatchStats
+      - name: DimPlayer
+      - name: DimPlayerClub
+      - name: DimPlayerPerf
+      - name: DimPlayerStats
+      - name: DimStadium
+      - name: FactMatch
+
 
 models:
-    - name: DimManagerClub_stg_to_dwh
+    - name: DimClub
+      description: >
+        Clubs participated
+    - name: DimManager
+      description: >
+        Managers participated
+    - name: DimManagerClub
       description: >
         Relation between managers and clubs
+    - name: DimMatchStats
+      description: >
+        Stats of match for 2 clubs
+    - name: DimPlayer
+      description: >
+        Players participated  
+    - name: DimPlayerClub
+      description: >
+        Relation between players and clubs  
+    - name: DimPlayerPerf
+      description: >
+        Relation between players and matches   
+    - name: DimPlayerStats
+      description: >
+        Relation between players and matches (more) 
+    - name: DimStadium
+      description: >
+        Stadiums participated          
+    - name: FactMatch
+      description: >
+        Matches from season 1992/1993 to 2020/2021   
