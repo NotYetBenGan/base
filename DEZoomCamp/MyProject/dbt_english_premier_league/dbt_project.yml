@@ -35,12 +35,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 # continue to be built as views. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 
-#models:
-#  dbt_english_premier_league:
-
-# models in `models/stg/ will be built in the "*_dwh" schema
 models:
   dbt_english_premier_league:
-    stg:
-      +schema: dwh    
+ 
 
