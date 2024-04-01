@@ -4,10 +4,10 @@
 ## Description of the problem
 - This is data engineering project about English Premier League stats, which I love very much
 - In this project we will try figure out:
-- Who from the players scored the most goals in season range?
-- Which team has the best possession in away games in season range?
+	- Who from the players scored the most goals in season range?
+	- Which team has the best possession in away games in season range?
 
-
+![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/Project%20WF.jpg)
 
 ## Dataset Information 
 - [Dataset link](https://www.kaggle.com/datasets/narekzamanyan/barclays-premier-league)
