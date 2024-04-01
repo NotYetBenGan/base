@@ -24,18 +24,23 @@ General information
 
 
 ## 1. Terrafrom 
-- [`main.tf`](main.tf) has instructions to create:
+- [`main.tf`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/terraform/main.tf) has instructions to create:
   - Bucket in GCP
   - Service account credentials JSON keyfile - need to add Role = Owner to project = "english-premier-league-417019"
 
-- Run in your work directory (WD):
-  ```terraform init```
-  #Terraform has been successfully initialized!
-  ```terraform plan```
-  ```terraform apply```
+- Run in your work directory (WD): 
+
+   ```terraform init```
+  
+   #Terraform has been successfully initialized!
+  
+   ```terraform plan```
+  
+   ```terraform apply```
 	
 - Now we have bucket in GCP + Service account credentials JSON keyfile in this WD
 - Enable APIs for your project:
+
 	https://console.cloud.google.com/apis/library/iam.googleapis.com
 	https://console.cloud.google.com/apis/library/iamcredentials.googleapis.com
 - Set GOOGLE_APPLICATION_CREDENTIALS variable 
@@ -44,29 +49,43 @@ General information
 ## 2. Mage
 - Files used to run up container with Mage (from mage-ai/mage-zoomcamp git hub repo): 
   - docker-compose.yml - has instructions from .env and Dockerfile
-  - .env
-  - Dockerfile
-  - requirements.txt - empty file just to avoid errors
+  - Dockerfile - standard file to create Mage project
 - Run:
-  ```docker-compose build```
-  ```docker-compose up```
+
+   ```docker-compose build```
+  
+   ```docker-compose up```
 - Open Mage studio in your browser:
-  ```http://localhost:6789/``` 
+  
+   ```http://localhost:6789/``` 
 
 - There are two pipelines in the mage projects
-  1. epl_github_to_gcs (GitHub to GCS): 
-    - Just one file to upload all csv files  [`export_all_to_gcs.py`](\Data_Engineering\Projects\MyProject\english-premier-league-project\data_exporters\export_all_to_gcs.py)
-  2. epl_gcs_to_bqstg (GCS to BQ) - 3 steps DAG: 
-    - Extract - load all csv files in the DataFrames
-    - Transform - clean data, remove redundant columns, add partitioning column, based on season
-    - Load all prepared DataFrames to BQ Stg schema
+  - epl_github_to_gcs (GitHub to GCS): 
+    -- Just one file to upload all csv files to GCS  [`export_all_to_gcs.py`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/mage/export_all_to_gcs.py)
+	![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/MageRun_epl_github_to_gcs.jpg)
+
+  - GCS
+	![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/GCS.jpg)
+
+  - epl_gcs_to_bqstg (GCS to BQ) - 3 steps DAG:
+  
+    -- Extract - load all csv files in the DataFrames [`load_all_from_gcs.py`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/mage/load_all_from_gcs.py)
+    
+    -- Transform - clean data, remove redundant columns, add partitioning column, based on season [`transform_all.py`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/mage/transform_all.py)
+    
+    -- Load all prepared DataFrames to BQ Stg schema [`export_all_to_bqstg`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/mage/export_all_to_bqstg.py)
+
+	![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/MageRun_epl_gcs_to_bqstg.jpg)
+
 - To call the Mage trigger - run this in CLI:
+  
   ```curl -i -X POST http://localhost:6789/api/pipeline_schedules/3/pipeline_runs/d7a5c8b8aeaf4322bbdded58a6b4d62d```
 
 
 ## 3. BigQuery:
 - There are 2 schemas in our datawarehouse - Stg and Dwh
 - All tables in Stg are loaded via Mage ETL
+	![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/BQ_Stg.jpg)	
 - All tables in Dwh are:
   - created by dbt as models
   - partitioned by seasonStartYear, which is sintetic year column for season (for ex seasonStartYear = 2002 where season = 2002/2003)
@@ -83,14 +102,15 @@ General information
   - Dwh object - see the description above
   - Data Marts:
     - 'MrtGoalScorers' - to collect data about the players scored the most goals in season range
+    ![alt text]()  
     - 'MrtAwayGames' - to collect data about teams, that has the best possession in away games in season range
-
+    ![alt text]()  	
 
 ## 5. Google Looker Studio
 - ReportGoalScorers
   - [https://lookerstudio.google.com/reporting/65123d92-abf5-4b86-b2ce-1a5be6ddce37/page/fh1uD](https://lookerstudio.google.com/reporting/65123d92-abf5-4b86-b2ce-1a5be6ddce37/page/fh1uD)
-  - [image]
+    ![alt text]()
  
 - ReportAwayGames
   - [https://lookerstudio.google.com/reporting/65123d92-abf5-4b86-b2ce-1a5be6ddce37/page/fh1uD](https://lookerstudio.google.com/reporting/3db9bd35-d2dc-4866-9067-98a3085b2754/page/622uD)
-  - [image]
+    ![alt text]()
