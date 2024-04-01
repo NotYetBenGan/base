@@ -92,7 +92,7 @@ General information
   - created by dbt as models
   - partitioned by seasonStartYear, which is sintetic year column for season (for ex seasonStartYear = 2002 where season = 2002/2003)
   - clustered by their PK (playerId, matchId, etc..)
-  - Fact table with matches is FactMatch
+  - Fact table with matches is created from this DBT model [`FactMatch`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/dbt_english_premier_league/models/stg/FactMatch.sql)
   - Dimension tables are started with Dim% prefix
  
 	![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/BQ_Dwh.jpg)
@@ -105,9 +105,13 @@ General information
 - The transformations are implemented to prepare:
   - Dwh Tables - see the description above
   - Data Marts - views, based on Dwh.tables:
+ 
+  
     - [`MrtGoalScorers`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/dbt_english_premier_league/models/dwh/MrtGoalScorers.sql) - to collect data about the players scored the most goals in season range
-    ![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/DBT_MrtGoalScorers.jpg)  
-    - 'MrtAwayGames' - to collect data about teams, that has the best possession in away games in season range
+    ![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/DBT_MrtGoalScorers.jpg)
+
+
+    - [`MrtAwayGames`](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/dbt_english_premier_league/models/dwh/MrtAwayGames.sql) - to collect data about teams, that has the best possession in away games in season range
     ![alt text](https://github.com/NotYetBenGan/base/blob/main/DEZoomCamp/MyProject/images/DBT_MrtAwayGames.jpg)  	
 
 
