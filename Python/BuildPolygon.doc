@@ -1,0 +1,55 @@
+import random
+
+def build_all_polygons(N, ListOfConnections, ListOfBlockers):
+    # Initialize adjacency list for the graph
+    adjacency_list = {i: set() for i in range(1, N + 1)}
+
+    # Create a list of all possible connections
+    possible_connections = []
+    for i in range(1, N + 1):
+        for j in range(i + 1, N + 1):
+            if (i, j) not in ListOfBlockers and (j, i) not in ListOfBlockers:
+                possible_connections.append((i, j))
+
+    # Try different random orders until all valid polygons are found
+    all_polygons = []
+    attempts = 0
+    while attempts < 1000:  # Limit the number of attempts to avoid infinite loop
+        random.shuffle(possible_connections)
+        adjacency_list = {i: set() for i in range(1, N + 1)}
+        for u, v in ListOfConnections:
+            adjacency_list[u].add(v)
+            adjacency_list[v].add(u)
+        for u, v in ListOfBlockers:
+            if v in adjacency_list[u]:
+                adjacency_list[u].remove(v)
+            if u in adjacency_list[v]:
+                adjacency_list[v].remove(u)
+        for u, v in possible_connections:
+            if len(adjacency_list[u]) < 2 and len(adjacency_list[v]) < 2:
+                adjacency_list[u].add(v)
+                adjacency_list[v].add(u)
+        if all(len(adjacency_list[i]) == 2 for i in range(1, N + 1)):
+            all_polygons.append(adjacency_list)
+            continue
+        attempts += 1
+
+    # Remove duplicates from all_polygons
+    unique_polygons = []
+    for p in all_polygons:      
+        if p not in unique_polygons:
+            unique_polygons.append(p)
+
+    return unique_polygons if unique_polygons else "No polygon"
+
+# Example usage
+N = 6
+ListOfConnections = [(5, 1), (2, 5)]
+ListOfBlockers = [(4, 2)]
+polygons = build_all_polygons(N, ListOfConnections, ListOfBlockers)
+print("\nList of polygons\n")
+if polygons == "No polygon":
+    print(polygons)
+else:
+    for polygon in polygons:
+        print(polygon)
