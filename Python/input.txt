@@ -1,0 +1,18 @@
+FeatureName1
+JiraName1
+
+JiraType1	JiraNumber1	StoryPoints1	Priority1	Status1	
+Assigned
+Developer1	Sprint	Actions 
+FeatureName1
+JiraName2
+
+JiraType2	JiraNumber2	StoryPoints2	Priority2	Status2	
+Assigned
+Developer2	Sprint	Actions 
+FeatureName2
+JiraName3
+
+JiraType3	JiraNumber3	StoryPoints3	Priority3	Status3	
+Assigned
+Developer3	Sprint	Actions 
